@@ -18,14 +18,16 @@ public class AssetVideoItem extends BaseVideoItem{
 
     private final AssetFileDescriptor mAssetFileDescriptor;
     private final String mTitle;
+    private final String mChannelName;
 
     private final Picasso mImageLoader;
     private final int mImageResource;
 
-    public AssetVideoItem(String title, AssetFileDescriptor assetFileDescriptor, VideoPlayerManager<MetaData> videoPlayerManager, Picasso imageLoader, int imageResource) {
+    public AssetVideoItem(String title, AssetFileDescriptor assetFileDescriptor, VideoPlayerManager<MetaData> videoPlayerManager, String channelName, Picasso imageLoader, int imageResource) {
         super(videoPlayerManager);
         mTitle = title;
         mAssetFileDescriptor = assetFileDescriptor;
+        mChannelName = channelName;
         mImageLoader = imageLoader;
         mImageResource = imageResource;
     }
@@ -34,7 +36,7 @@ public class AssetVideoItem extends BaseVideoItem{
     public void update(int position, final VideoViewHolder viewHolder, VideoPlayerManager videoPlayerManager) {
         if(SHOW_LOGS) Logger.v(TAG, "update, position " + position);
 
-        viewHolder.mTitle.setText(mTitle);
+        viewHolder.mTitle.setText(mChannelName);
         viewHolder.mCover.setVisibility(View.VISIBLE);
         mImageLoader.load(mImageResource).into(viewHolder.mCover);
     }
