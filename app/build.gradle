@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     packagingOptions { //specify exclude because these files are duplicated in different libraries
         exclude 'LICENSE.txt'
@@ -13,7 +13,7 @@ android {
         applicationId "com.volokh.danylo.videolist"
 
         minSdkVersion Integer.parseInt(project.BUILD_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+        targetSdkVersion 25
 
         versionCode 1
         versionName "1.0"
@@ -29,11 +29,12 @@ android {
 dependencies {
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile "com.android.support:appcompat-v7:25.1.1"
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.sandrios.android:sandriosCamera:1.0.9'
 
     compile project(':video-player-manager')
     compile project(':list-visibility-utils')
