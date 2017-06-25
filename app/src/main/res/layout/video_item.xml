@@ -19,7 +19,7 @@
                 style="@style/BaseText"/>
 
             <ImageView
-                android:id="@+id/add"
+                android:id="@+id/contribute"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:padding="7.5dp"
