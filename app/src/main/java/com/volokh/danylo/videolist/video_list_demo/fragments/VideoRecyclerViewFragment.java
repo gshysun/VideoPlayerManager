@@ -4,16 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Toast;
 
 import com.volokh.danylo.video_player_manager.Config;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.meta.CurrentItemMetaData;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.videolist.R;
+import com.volokh.danylo.videolist.demo.VideoListActivity;
 import com.volokh.danylo.videolist.video_list_demo.adapter.VideoRecyclerViewAdapter;
 import com.volokh.danylo.videolist.video_list_demo.adapter.items.BaseVideoItem;
 import com.volokh.danylo.videolist.video_list_demo.adapter.items.ItemFactory;
@@ -27,6 +29,17 @@ import com.volokh.danylo.visibility_utils.scroll_utils.RecyclerViewItemPositionG
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * This fragment shows of how to use {@link VideoPlayerManager} with a RecyclerView.
@@ -34,8 +47,8 @@ import java.util.ArrayList;
 public class VideoRecyclerViewFragment extends Fragment {
 
     private static final boolean SHOW_LOGS = Config.SHOW_LOGS;
-    private static final String TAG = VideoRecyclerViewFragment.class.getSimpleName();
-
+    private static final String TAG = "Shyam";// VideoRecyclerViewFragment.class.getSimpleName();
+    private static final String DemoKeyForLiveStitching = "103615038522";
     private final ArrayList<BaseVideoItem> mList = new ArrayList<>();
 
     /**
@@ -47,6 +60,7 @@ public class VideoRecyclerViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private RequestQueue mRequestQueue;
 
     /**
      * ItemsPositionGetter is used by {@link ListItemsVisibilityCalculator} for getting information about
@@ -69,6 +83,8 @@ public class VideoRecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mRequestQueue = Volley.newRequestQueue(getContext());
 
         try {
             mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
@@ -122,14 +138,64 @@ public class VideoRecyclerViewFragment extends Fragment {
                             mLayoutManager.findFirstVisibleItemPosition(),
                             mLayoutManager.findLastVisibleItemPosition() - mLayoutManager.findFirstVisibleItemPosition() + 1,
                             mScrollState);
+
+                    if (!recyclerView.canScrollVertically(-1)) {
+                    } else if (!recyclerView.canScrollVertically(1)) {
+                        onScrolledToBottom();
+                    } else if (dy < 0) {
+                    } else if (dy > 0) {
+                    }
                 }
             }
+
+            public void onScrolledToBottom() {
+                Toast.makeText(getContext(), "Updating list...", Toast.LENGTH_SHORT).show();
+                // popualate the only live tile - demo code ;)
+                //
+                fetchFeedData();
+
+
+            }
+
         });
         mItemsPositionGetter = new RecyclerViewItemPositionGetter(mLayoutManager, mRecyclerView);
 
         return rootView;
     }
 
+    private void fetchFeedData() {
+        String apiurl = "http://" + VideoListActivity.GetRestApiEndPoint() + "/api/getlom";
+        Log.d(TAG, "Fetching data from - " + apiurl);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, apiurl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "Got response" + response.toString());
+                        try {
+                            Iterator<String> keys = response.keys();
+                            while(keys.hasNext()) {
+                                String key = keys.next();
+                                if (key == DemoKeyForLiveStitching) {
+                                    Log.d(TAG, "key - " + key + " value - " + response.getJSONObject(key));
+                                    JSONObject dataCollection = response.getJSONObject(key);
+                                    if (dataCollection.has("stitchedVideo")) {
+
+                                    }
+                                }
+                            }
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }                       }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error: " + error.getMessage());
+                    }
+                }
+        );
+        mRequestQueue.add(request);
+
+    }
     @Override
     public void onResume() {
         super.onResume();

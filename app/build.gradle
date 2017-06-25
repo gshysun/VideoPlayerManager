@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.volokh.danylo.videolist"
 
-        minSdkVersion Integer.parseInt(project.BUILD_MIN_SDK_VERSION)
+        minSdkVersion 19
         targetSdkVersion 25
 
         versionCode 1
@@ -35,7 +35,8 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.sandrios.android:sandriosCamera:1.0.9'
-
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.7'
     compile project(':video-player-manager')
     compile project(':list-visibility-utils')
 }

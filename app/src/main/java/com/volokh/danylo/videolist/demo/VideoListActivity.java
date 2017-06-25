@@ -33,6 +33,9 @@ public class VideoListActivity extends ActionBarActivity implements VisibilityUt
     private Toolbar mToolbar;
     private static Activity sActivityHandle;
     private static String sServerAddress = "";
+    private static final int RESTAPIPORT = 3000;
+    private static final int HTTPSERVERPORT = 3002;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,16 @@ public class VideoListActivity extends ActionBarActivity implements VisibilityUt
     @Override
     public void setTitle(String title) {
         mToolbar.setTitle(title);
+    }
+
+    public static String GetRestApiEndPoint() {
+        //return sServerAddress + RESTAPIPORT;
+        return "192.168.86.102:" + RESTAPIPORT;
+    }
+
+    public static String GetHttpServerEndPoint() {
+        //return sServerAddress + RESTAPIPORT;
+        return "192.168.86.102:" + HTTPSERVERPORT;
     }
 
     private void GetServerAddressFromUser()
