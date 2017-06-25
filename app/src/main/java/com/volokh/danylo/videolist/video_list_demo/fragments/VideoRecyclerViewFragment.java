@@ -48,9 +48,9 @@ public class VideoRecyclerViewFragment extends Fragment {
 
     private static final boolean SHOW_LOGS = Config.SHOW_LOGS;
     private static final String TAG = "Shyam";// VideoRecyclerViewFragment.class.getSimpleName();
-    private static final String DemoKeyForLiveStitching = "103615038522";
+    private static final String DemoKeyForLiveStitching = "770262637035";
     private final ArrayList<BaseVideoItem> mList = new ArrayList<>();
-
+    private int mStartingSize;
     /**
      * Only the one (most visible) view should be active (and playing).
      * To calculate visibility of views we use {@link SingleListViewItemActiveCalculator}
@@ -61,7 +61,7 @@ public class VideoRecyclerViewFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private RequestQueue mRequestQueue;
-
+    private VideoRecyclerViewAdapter mVideoRecyclerViewAdapter;
     /**
      * ItemsPositionGetter is used by {@link ListItemsVisibilityCalculator} for getting information about
      * items position in the RecyclerView and LayoutManager
@@ -95,13 +95,16 @@ public class VideoRecyclerViewFragment extends Fragment {
             mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
             mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
 
-            mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
+            //mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
+            //mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
+            //mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
+            //mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        mStartingSize = mList.size();
         View rootView = inflater.inflate(R.layout.fragment_video_recycler_view, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -113,9 +116,9 @@ public class VideoRecyclerViewFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        VideoRecyclerViewAdapter videoRecyclerViewAdapter = new VideoRecyclerViewAdapter(mVideoPlayerManager, getActivity(), mList);
+        mVideoRecyclerViewAdapter = new VideoRecyclerViewAdapter(mVideoPlayerManager, getActivity(), mList);
 
-        mRecyclerView.setAdapter(videoRecyclerViewAdapter);
+        mRecyclerView.setAdapter(mVideoRecyclerViewAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -175,11 +178,25 @@ public class VideoRecyclerViewFragment extends Fragment {
                             Iterator<String> keys = response.keys();
                             while(keys.hasNext()) {
                                 String key = keys.next();
-                                if (key == DemoKeyForLiveStitching) {
+                                //Log.d(TAG, "searching for " + DemoKeyForLiveStitching + " key - " + key + " value - " + response.getJSONObject(key));
+                                if (key.equals(DemoKeyForLiveStitching)) {
                                     Log.d(TAG, "key - " + key + " value - " + response.getJSONObject(key));
                                     JSONObject dataCollection = response.getJSONObject(key);
                                     if (dataCollection.has("stitchedVideo")) {
-
+                                        String sv = dataCollection.getString("stitchedVideo");
+                                        Log.d(TAG, "stitched video @ = " + sv);
+                                        try {
+                                            String videoUrl = "http://" + VideoListActivity.GetHttpServerEndPoint() + "/" + sv;
+                                            Log.d(TAG, "creating video tile from " + videoUrl);
+                                            if (mList.size() > mStartingSize) {
+                                                mList.remove(mList.size() - 1);
+                                                mVideoRecyclerViewAdapter.notifyDataSetChanged();
+                                            }
+                                            mList.add(ItemFactory.createItemFromAsset(dataCollection.getString("name"), videoUrl, R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
+                                            mVideoRecyclerViewAdapter.notifyDataSetChanged();
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                     }
                                 }
                             }

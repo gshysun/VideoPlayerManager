@@ -17,16 +17,21 @@ public class AssetVideoItem extends BaseVideoItem{
     private static final boolean SHOW_LOGS = Config.SHOW_LOGS;
 
     private final AssetFileDescriptor mAssetFileDescriptor;
+    private final String mAssetUrl;
     private final String mTitle;
     private final String mChannelName;
 
     private final Picasso mImageLoader;
     private final int mImageResource;
 
-    public AssetVideoItem(String title, AssetFileDescriptor assetFileDescriptor, VideoPlayerManager<MetaData> videoPlayerManager, String channelName, Picasso imageLoader, int imageResource) {
+    public AssetVideoItem(String title, String assetUrl, AssetFileDescriptor assetFileDescriptor, VideoPlayerManager<MetaData> videoPlayerManager, String channelName, Picasso imageLoader, int imageResource) {
         super(videoPlayerManager);
         mTitle = title;
-        mAssetFileDescriptor = assetFileDescriptor;
+        mAssetUrl = assetUrl;
+        if (mAssetUrl.isEmpty())
+            mAssetFileDescriptor = assetFileDescriptor;
+        else
+            mAssetFileDescriptor = null;
         mChannelName = channelName;
         mImageLoader = imageLoader;
         mImageResource = imageResource;
@@ -44,7 +49,10 @@ public class AssetVideoItem extends BaseVideoItem{
 
     @Override
     public void playNewVideo(MetaData currentItemMetaData, VideoPlayerView player, VideoPlayerManager<MetaData> videoPlayerManager) {
-        videoPlayerManager.playNewVideo(currentItemMetaData, player, mAssetFileDescriptor);
+        if (mAssetUrl.isEmpty())
+            videoPlayerManager.playNewVideo(currentItemMetaData, player, mAssetFileDescriptor);
+        else
+            videoPlayerManager.playNewVideo(currentItemMetaData, player, mAssetUrl);
     }
 
     @Override
