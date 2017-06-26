@@ -78,7 +78,7 @@ public abstract class BaseVideoItem implements VideoItem, ListItem{
                 // When video is prepared it's about to start playback. So we hide the cover
                 // delay the set invisible so that the transition is smooth
                 view.animate()
-                        .setDuration(300)
+                        .setDuration(800)
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {

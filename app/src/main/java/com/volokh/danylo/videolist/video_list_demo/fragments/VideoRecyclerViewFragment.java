@@ -87,18 +87,14 @@ public class VideoRecyclerViewFragment extends Fragment {
         mRequestQueue = Volley.newRequestQueue(getContext());
 
         try {
-            mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
+            mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager, "Milwaukee, Wisconsin", false));
+            mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager, "Hollywood, LA", false));
+            mList.add(ItemFactory.createItemFromAsset("ManU vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager, "Barcelona, Spain", false));
 
-            mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
-            mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
+            mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager, "Milwaukee, Wisconsin", false));
+            mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager, "Hollywood, LA", false));
+            mList.add(ItemFactory.createItemFromAsset("ManU vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager, "Barcelona, Spain", false));
 
-            //mList.add(ItemFactory.createItemFromAsset("Obama for Hope", "video_sample_1.mp4", R.drawable.video_sample_1_pic, getActivity(), mVideoPlayerManager));
-            //mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
-            //mList.add(ItemFactory.createItemFromAsset("Manu vs FC Barcelona", "video_sample_3.mp4", R.drawable.video_sample_3_pic, getActivity(), mVideoPlayerManager));
-            //mList.add(ItemFactory.createItemFromAsset("Justin Timberlake Concert", "video_sample_2.mp4", R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -193,7 +189,7 @@ public class VideoRecyclerViewFragment extends Fragment {
                                                 mList.remove(mList.size() - 1);
                                                 mVideoRecyclerViewAdapter.notifyDataSetChanged();
                                             }
-                                            mList.add(ItemFactory.createItemFromAsset(dataCollection.getString("name"), videoUrl, R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager));
+                                            mList.add(ItemFactory.createItemFromAsset(dataCollection.getString("name"), videoUrl, R.drawable.video_sample_2_pic, getActivity(), mVideoPlayerManager, "Paris, France", true));
                                             mVideoRecyclerViewAdapter.notifyDataSetChanged();
                                         } catch (IOException e) {
                                             throw new RuntimeException(e);
