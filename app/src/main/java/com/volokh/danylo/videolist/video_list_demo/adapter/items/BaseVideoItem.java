@@ -1,5 +1,7 @@
 package com.volokh.danylo.videolist.video_list_demo.adapter.items;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,7 +61,7 @@ public abstract class BaseVideoItem implements VideoItem, ListItem{
     }
 
     public View createView(ViewGroup parent, int screenWidth) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_item, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_item, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = screenWidth;
 
@@ -74,7 +76,15 @@ public abstract class BaseVideoItem implements VideoItem, ListItem{
             @Override
             public void onVideoPreparedMainThread() {
                 // When video is prepared it's about to start playback. So we hide the cover
-                videoViewHolder.mCover.setVisibility(View.INVISIBLE);
+                // delay the set invisible so that the transition is smooth
+                view.animate()
+                        .setDuration(300)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                videoViewHolder.mCover.setVisibility(View.INVISIBLE);
+                            }
+                        }).start();
             }
 
             @Override

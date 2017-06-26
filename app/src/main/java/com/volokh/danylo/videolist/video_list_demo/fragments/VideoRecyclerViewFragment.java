@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.AbsListView;
 import android.widget.Toast;
 
@@ -48,7 +49,6 @@ public class VideoRecyclerViewFragment extends Fragment {
 
     private static final boolean SHOW_LOGS = Config.SHOW_LOGS;
     private static final String TAG = "Shyam";// VideoRecyclerViewFragment.class.getSimpleName();
-    private static final String DemoKeyForLiveStitching = "770262637035";
     private final ArrayList<BaseVideoItem> mList = new ArrayList<>();
     private int mStartingSize;
     /**
@@ -178,15 +178,16 @@ public class VideoRecyclerViewFragment extends Fragment {
                             Iterator<String> keys = response.keys();
                             while(keys.hasNext()) {
                                 String key = keys.next();
-                                //Log.d(TAG, "searching for " + DemoKeyForLiveStitching + " key - " + key + " value - " + response.getJSONObject(key));
-                                if (key.equals(DemoKeyForLiveStitching)) {
-                                    Log.d(TAG, "key - " + key + " value - " + response.getJSONObject(key));
+                                if (key.equals(VideoListActivity.DemoKeyForLiveStitching)) {
+                                    //Log.d(TAG, "key - " + key + " value - " + response.getJSONObject(key));
                                     JSONObject dataCollection = response.getJSONObject(key);
                                     if (dataCollection.has("stitchedVideo")) {
                                         String sv = dataCollection.getString("stitchedVideo");
                                         Log.d(TAG, "stitched video @ = " + sv);
                                         try {
                                             String videoUrl = "http://" + VideoListActivity.GetHttpServerEndPoint() + "/" + sv;
+                                            if (!URLUtil.isValidUrl(videoUrl))
+                                                return;
                                             Log.d(TAG, "creating video tile from " + videoUrl);
                                             if (mList.size() > mStartingSize) {
                                                 mList.remove(mList.size() - 1);

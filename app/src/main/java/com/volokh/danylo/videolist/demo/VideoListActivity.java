@@ -32,9 +32,10 @@ public class VideoListActivity extends ActionBarActivity implements VisibilityUt
     private static final int CAPTURE_MEDIA = 368;
     private Toolbar mToolbar;
     private static Activity sActivityHandle;
-    private static String sServerAddress = "";
+    private static String sServerAddress = "192.168.86.102";
     private static final int RESTAPIPORT = 3000;
     private static final int HTTPSERVERPORT = 3002;
+    public static final String DemoKeyForLiveStitching = "770262637035";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,13 +101,11 @@ public class VideoListActivity extends ActionBarActivity implements VisibilityUt
     }
 
     public static String GetRestApiEndPoint() {
-        //return sServerAddress + RESTAPIPORT;
-        return "192.168.86.102:" + RESTAPIPORT;
+        return sServerAddress + ":" + RESTAPIPORT;
     }
 
     public static String GetHttpServerEndPoint() {
-        //return sServerAddress + RESTAPIPORT;
-        return "192.168.86.102:" + HTTPSERVERPORT;
+        return sServerAddress + ":" + HTTPSERVERPORT;
     }
 
     private void GetServerAddressFromUser()

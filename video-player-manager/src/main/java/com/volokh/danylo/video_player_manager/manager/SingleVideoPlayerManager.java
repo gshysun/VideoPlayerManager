@@ -250,7 +250,7 @@ public class SingleVideoPlayerManager implements VideoPlayerManager<MetaData>, V
      * @param videoUrl - a source path
      */
     private void startPlayback(VideoPlayerView videoPlayerView, String videoUrl) {
-        if(SHOW_LOGS) Logger.v(TAG, "startPlayback");
+        if(SHOW_LOGS) Logger.v(TAG, "startPlayback - networked media");
 
         mPlayerHandler.addMessages(Arrays.asList(
                 new CreateNewPlayerInstance(videoPlayerView, this),
@@ -261,7 +261,7 @@ public class SingleVideoPlayerManager implements VideoPlayerManager<MetaData>, V
     }
 
     private void startPlayback(VideoPlayerView videoPlayerView, AssetFileDescriptor assetFileDescriptor) {
-        if(SHOW_LOGS) Logger.v(TAG, "startPlayback");
+        if(SHOW_LOGS) Logger.v(TAG, "startPlayback - local file");
 
         mPlayerHandler.addMessages(Arrays.asList(
                 new CreateNewPlayerInstance(videoPlayerView, this),
